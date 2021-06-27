@@ -1,14 +1,12 @@
-import preprocessor as p
-p.set_options(p.OPT.URL, p.OPT.EMOJI)
-
 import os
 import csv
 
 class CrisisTweetsLoader():
-	def __init__(self):
+	def __init__(self, clean):
 		self.tweets26, self.tweets26_unlabeled, self.truth26 = self.load26()
 		self.tweets6, self.tweets6_unlabeled, self.truth6 = self.load6()
 		self.tweets8, self.tweets8_unlabeled, self.truth8 = self.load8()
+		self.clean = clean
 
 	def __call__(self, name):
 		assert name in ['C6', 'C26', 'C8']
@@ -26,7 +24,7 @@ class CrisisTweetsLoader():
 		for entry in entries:
 			if 'Truth' not in entry:
 				with open(os.path.join(folder, entry), 'r') as f:
-					tweets_labeled[entry.replace('-tweets_labeled.csv', '')] = set([p.clean(x[1]) for x in list(csv.reader(f))[1:]])
+					tweets_labeled[entry.replace('-tweets_labeled.csv', '')] = set([self.clean(x[1]) for x in list(csv.reader(f))[1:]])
 
 		tweets_unlabeled = set.union(*tweets_labeled.values())
 		with open('tweets-C26/crisisTruthC26.csv', 'r', errors='ignore') as f:
@@ -43,7 +41,7 @@ class CrisisTweetsLoader():
 		for entry in entries:
 			if 'Truth' not in entry:
 				with open(os.path.join(folder, entry), 'r') as f:
-					tweets_labeled[entry.replace('-ontopic_offtopic.csv', '')] = set([p.clean(x[1]) for x in list(csv.reader(f))[1:] if x[2] == 'on-topic'])
+					tweets_labeled[entry.replace('-ontopic_offtopic.csv', '')] = set([self.clean(x[1]) for x in list(csv.reader(f))[1:] if x[2] == 'on-topic'])
 
 		tweets_unlabeled = set.union(*tweets_labeled.values())
 
@@ -61,8 +59,8 @@ class CrisisTweetsLoader():
 			for x in list(csv.reader(f))[1:]:
 				if len(x) != 0:
 					if x[0] not in tweets_labeled:
-						tweets_labeled[x[0]] = {p.clean(x[2])}
-					tweets_labeled[x[0]].add(p.clean(x[2]))
+						tweets_labeled[x[0]] = {self.clean(x[2])}
+					tweets_labeled[x[0]].add(self.clean(x[2]))
 
 		tweets_unlabeled = set.union(*tweets_labeled.values())
 		with open('tweets-C8/eventTruth.csv', 'r', errors='ignore') as f:
