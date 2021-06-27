@@ -1,5 +1,6 @@
 import os
 import csv
+from collections import Counter
 
 from cleaner import TweetCleaner
 
@@ -18,6 +19,12 @@ class CrisisTweetsLoader():
 			return self.tweets8, self.tweets8_unlabeled, self.truth8
 		else:
 			return self.tweets26, self.tweets26_unlabeled, self.truth26
+		
+	def toUnlabeled(self, tweets_labeled):
+		tweets_unlabeled = Counter()
+		for v in tweets_labeled.values():
+			tweets_unlabeled.update(v)
+		return tweets_unlabeled
 
 	def load26(self):
 		folder = 'tweets-C26'
@@ -26,9 +33,10 @@ class CrisisTweetsLoader():
 		for entry in entries:
 			if 'Truth' not in entry:
 				with open(os.path.join(folder, entry), 'r') as f:
-					tweets_labeled[entry.replace('-tweets_labeled.csv', '')] = set([self.clean(x[1]) for x in list(csv.reader(f))[1:]])
+					tweets_labeled[entry.replace('-tweets_labeled.csv', '')] = Counter([self.clean(x[1]) for x in list(csv.reader(f))[1:]])
 
-		tweets_unlabeled = set.union(*tweets_labeled.values())
+		tweets_unlabeled = toUnlabeled(tweets_labeled)
+			
 		with open('tweets-C26/crisisTruthC26.csv', 'r', errors='ignore') as f:
 			truth = {x[0]:x[1] for x in list(csv.reader(f))[1:]}
 
@@ -43,9 +51,9 @@ class CrisisTweetsLoader():
 		for entry in entries:
 			if 'Truth' not in entry:
 				with open(os.path.join(folder, entry), 'r') as f:
-					tweets_labeled[entry.replace('-ontopic_offtopic.csv', '')] = set([self.clean(x[1]) for x in list(csv.reader(f))[1:] if x[2] == 'on-topic'])
+					tweets_labeled[entry.replace('-ontopic_offtopic.csv', '')] = Counter([self.clean(x[1]) for x in list(csv.reader(f))[1:] if x[2] == 'on-topic'])
 
-		tweets_unlabeled = set.union(*tweets_labeled.values())
+		tweets_unlabeled = toUnlabeled(tweets_labeled)
 
 		with open('tweets-C6/crisisTruthC6.csv', 'r', errors='ignore') as f:
 			truth = {x[0]:x[1] for x in list(csv.reader(f))[1:]}
@@ -61,10 +69,10 @@ class CrisisTweetsLoader():
 			for x in list(csv.reader(f))[1:]:
 				if len(x) != 0:
 					if x[0] not in tweets_labeled:
-						tweets_labeled[x[0]] = {self.clean(x[2])}
-					tweets_labeled[x[0]].add(self.clean(x[2]))
+						tweets_labeled[x[0]] = Counter({self.clean(x[2])})
+					tweets_labeled[x[0]].update(Counter({self.clean(x[2])}))
 
-		tweets_unlabeled = set.union(*tweets_labeled.values())
+		tweets_unlabeled = toUnlabeled(tweets_labeled)
 		with open('tweets-C8/eventTruth.csv', 'r', errors='ignore') as f:
 			truth = {x[0]:x[1] for x in list(csv.reader(f))[1:]}
 
