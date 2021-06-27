@@ -1,4 +1,4 @@
-cp crisis-dataset/crisisload.py ./
+cp crisis-dataset/*.py ./
 find . -name "*.zip" | while read filename; do unzip -o -d "`dirname "$filename"`" "$filename"; done;
 find . -name "*.zip" | while read filename; do unzip -o -d "`dirname "$filename"`" "$filename"; done;
 rm -rf tweets-C26; mkdir tweets-C26; cp crisis-dataset/C26\ Dataset/Crisis\ Tweets/*-tweets_labeled.csv tweets-C26/; cp crisis-dataset/C26\ Dataset/*.csv  tweets-C26/
