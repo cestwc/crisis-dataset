@@ -4,11 +4,11 @@ import csv
 from cleaner import TweetCleaner
 
 class CrisisTweetsLoader():
-	def __init__(self):
+	def __init__(self, clean):
+		self.clean = clean
 		self.tweets26, self.tweets26_unlabeled, self.truth26 = self.load26()
 		self.tweets6, self.tweets6_unlabeled, self.truth6 = self.load6()
 		self.tweets8, self.tweets8_unlabeled, self.truth8 = self.load8()
-		self.clean = TweetCleaner(keep_en_only=True)
 
 	def __call__(self, name):
 		assert name in ['C6', 'C26', 'C8']
