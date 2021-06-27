@@ -29,7 +29,7 @@ class TweetCleaner():
 		if self.disabbr:
 			tweet = disabbreviate(tweet)
 		if self.en or self.stop or self.long:
-			tokens = tt.tokenize(tweet)
+			tokens = self.tt.tokenize(tweet)
 			tokens = [w for w in tokens if (w not in stop_words or not self.stop) and ((len(w) > 3 and len(w) < 20) or not self.long)]
 			if self.en:
 				tokens = [w for w in tokens if w in self.en or '#' in w or '@' in w]
