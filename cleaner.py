@@ -40,7 +40,7 @@ class TweetCleaner():
 def remove_punct(text):
 	new_words = []
 	for word in text:
-		w = re.sub(r'[^\w\s]','',word) 
+		w = re.sub(r'[^\w\s#@]','',word) 
 		w = re.sub(r'\_|\d',' ',w)
 		new_words.append(w)
 	return ''.join(new_words).lower()
