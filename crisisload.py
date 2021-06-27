@@ -1,6 +1,8 @@
 import os
 import csv
 
+from cleaner import TweetCleaner
+
 class CrisisTweetsLoader():
 	def __init__(self, clean):
 		self.tweets26, self.tweets26_unlabeled, self.truth26 = self.load26()
