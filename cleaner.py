@@ -1,3 +1,6 @@
+import preprocessor as p
+p.set_options(p.OPT.URL, p.OPT.EMOJI)
+
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -20,6 +23,7 @@ class TweetCleaner():
 		self.tt = TweetTokenizer()
 
 	def __call__(self, tweet):
+		tweet = p.clean(tweet)
 		if self.punct:
 			tweet = remove_punct(tweet)
 		if self.disabbr:
