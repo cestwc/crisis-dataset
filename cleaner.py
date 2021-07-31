@@ -24,8 +24,6 @@ class TweetCleaner():
 
 	def __call__(self, tweet):
 		tweet = p.clean(tweet)
-		if self.punct:
-			tweet = remove_punct(tweet)
 		if self.disabbr:
 			tweet = disabbreviate(tweet)
 		if self.en or self.stop or self.long:
@@ -34,6 +32,8 @@ class TweetCleaner():
 			if self.en:
 				tokens = [w for w in tokens if w in self.en or '#' in w or '@' in w]
 			tweet = ' '.join(tokens)
+		if self.punct:
+			tweet = remove_punct(tweet)
 		return tweet
 
 
