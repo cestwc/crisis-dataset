@@ -2,7 +2,7 @@ import os
 import csv
 from collections import Counter
 
-from cleaner import TweetCleaner
+from cleaner import TweetCleaner, remove_punct
 
 class CrisisTweetsLoader():
 	def __init__(self, clean):
@@ -38,7 +38,7 @@ class CrisisTweetsLoader():
 		tweets_unlabeled = self.unlabel(tweets_labeled)
 			
 		with open('tweets-C26/crisisTruthC26.csv', 'r', errors='ignore') as f:
-			truth = {x[0]:self.clean(x[1]) for x in list(csv.reader(f))[1:]}
+			truth = {x[0]:remove_punct(x[1]) for x in list(csv.reader(f))[1:]}
 
 		assert set(truth.keys()).issubset(set(tweets_labeled.keys()))
 
@@ -56,7 +56,7 @@ class CrisisTweetsLoader():
 		tweets_unlabeled = self.unlabel(tweets_labeled)
 
 		with open('tweets-C6/crisisTruthC6.csv', 'r', errors='ignore') as f:
-			truth = {x[0]:self.clean(x[1]) for x in list(csv.reader(f))[1:]}
+			truth = {x[0]:remove_punct(x[1]) for x in list(csv.reader(f))[1:]}
 
 		assert truth.keys() == tweets_labeled.keys()
 
@@ -74,7 +74,7 @@ class CrisisTweetsLoader():
 
 		tweets_unlabeled = self.unlabel(tweets_labeled)
 		with open('tweets-C8/eventTruth.csv', 'r', errors='ignore') as f:
-			truth = {x[0]:self.clean(x[1]) for x in list(csv.reader(f))[1:]}
+			truth = {x[0]:remove_punct(x[1]) for x in list(csv.reader(f))[1:]}
 
 		assert truth.keys() == tweets_labeled.keys()
 
